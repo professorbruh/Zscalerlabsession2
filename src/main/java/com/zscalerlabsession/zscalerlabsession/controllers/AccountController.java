@@ -7,12 +7,10 @@ import com.zscalerlabsession.zscalerlabsession.response.AccountResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/accounts")
@@ -27,14 +25,27 @@ public class AccountController {
         Account savedAccount = accountRepository.save(account);
 
         long newNum = accountRepository.count();
-        String status = "";
+        String status = "", message = "";
         if(newNum > num) {
             status = "200";
+            message = "Account created!";
         }
         else{
-            status = "4XX";
+            message = "Account could not be created";
+            status = "404";
         }
 
-        return new ResponseEntity<Object>(new AccountResponse(new Date(), "Account created", status, savedAccount), HttpStatus.OK);
+        return new ResponseEntity<Object>(new AccountResponse(new Date(), message, status, savedAccount), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Object> getDetails(@PathVariable("id") long id){
+        Optional<Account> foundAccount = accountRepository.findById(id);
+        if(foundAccount.isPresent()){
+            return new ResponseEntity<Object>(new AccountResponse(new Date(), "Account found!", "200", foundAccount.get()), HttpStatus.OK);
+        }
+        else{
+            return new ResponseEntity<Object>(new AccountResponse(new Date(), "Account not found!", "404", foundAccount.get()), HttpStatus.OK);
+        }
     }
 }
