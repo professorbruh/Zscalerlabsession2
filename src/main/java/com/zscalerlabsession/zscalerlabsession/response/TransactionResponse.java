@@ -1,19 +1,29 @@
-package com.zscalerlabsession.zscalerlabsession.Model;
-import javax.persistence.*;
+package com.zscalerlabsession.zscalerlabsession.response;
+
 import java.sql.Date;
 
-@Entity
-public class Transaction {
+public class TransactionResponse {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
     private long sender;
     private long receiver;
     private double amount;
     private String status;
-    private Date date;
+
+    public TransactionResponse(long id, long sender, long receiver, double amount, String status, Date date) {
+        this.id = id;
+        this.sender = sender;
+        this.receiver = receiver;
+        this.amount = amount;
+        this.status = status;
+        this.date = date;
+    }
+    public TransactionResponse(long sender, long receiver, double amount, String status) {
+        this.sender = sender;
+        this.receiver = receiver;
+        this.amount = amount;
+        this.status = status;
+    }
 
 
     public long getId() {
@@ -64,18 +74,7 @@ public class Transaction {
         this.date = date;
     }
 
-    public Transaction() {
-        super();
-    }
-
-    public Transaction(long sender, long receiver, double amount, String status, java.sql.Date date) {
-        this.sender = sender;
-        this.receiver = receiver;
-        this.amount = amount;
-        this.status = status;
-        this.date = date;
-    }
-
+    private Date date;
 
 
 

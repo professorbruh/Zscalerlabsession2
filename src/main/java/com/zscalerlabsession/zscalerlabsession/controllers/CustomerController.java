@@ -34,8 +34,9 @@ public class CustomerController
 	AuthService authService;
 
     @GetMapping("/testing")
-    public String testing(){
-        return "Testing";
+    public ResponseEntity<Object> testing(){
+		CustomResponseForNoUser response = new CustomResponseForNoUser(new Date(),"Email id already exists","409");
+		return new ResponseEntity<Object>(response,HttpStatus.OK);
     }
 
     @PostMapping("/createCustomer")

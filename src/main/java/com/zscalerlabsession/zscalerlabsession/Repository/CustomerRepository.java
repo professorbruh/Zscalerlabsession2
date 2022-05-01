@@ -12,4 +12,6 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     @Query("SELECT a FROM Customer a WHERE a.emailId=?1")
     Customer fetchCustomerByEmail(String emailId);
 
+
+
 }
