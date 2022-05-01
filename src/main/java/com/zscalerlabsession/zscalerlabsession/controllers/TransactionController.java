@@ -33,9 +33,9 @@ public class TransactionController {
     @PostMapping("/transfer")
     public ResponseEntity<Object> get(@RequestBody Transaction transaction)
     {
-        Account sender = accountRepository.fetchAccountById(transaction.getSender());
+        Account sender = accountRepository.fetchAccountByAccountNumber(transaction.getSender());
 
-        Account receiver = accountRepository.fetchAccountById(transaction.getReceiver());
+        Account receiver = accountRepository.fetchAccountByAccountNumber(transaction.getReceiver());
 
         if(sender!=null && receiver!=null)
         {
