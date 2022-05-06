@@ -2,9 +2,10 @@ package com.zscalerlabsession.zscalerlabsession.serviceimpl;
 
 import com.zscalerlabsession.zscalerlabsession.Model.Customer;
 import com.zscalerlabsession.zscalerlabsession.service.ValidationService;
+import org.springframework.stereotype.Service;
 
 import java.util.regex.Pattern;
-
+@Service
 public class ValidationServiceImpl implements ValidationService
 {
 

@@ -8,6 +8,7 @@ import com.zscalerlabsession.zscalerlabsession.security.JwtUtils;
 import com.zscalerlabsession.zscalerlabsession.response.CustomResponseForNoUser;
 
 import com.zscalerlabsession.zscalerlabsession.service.AuthService;
+import com.zscalerlabsession.zscalerlabsession.service.ValidationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +34,9 @@ public class CustomerController
 	@Autowired
 	AuthService authService;
 
+	@Autowired
+	ValidationService validationService;
+
     @GetMapping("/testing")
     public ResponseEntity<Object> testing(){
 		CustomResponseForNoUser response = new CustomResponseForNoUser(new Date(),"Email id already exists","409");
@@ -45,11 +49,19 @@ public class CustomerController
 		Customer fetchAdmin = authService.fetchCustomerByEmail(customerDetails.getEmailId());
 
 		if(fetchAdmin == null) {
-			Customer cust = authService.createCustomer(customerDetails);
+			if (validationService.emailValidation(customerDetails)) {
+				Customer cust = authService.createCustomer(customerDetails);
 
-			CustomerDetailsResponse response = new CustomerDetailsResponse(new Date(),"Customer Created Succesfully","200",cust);
+				CustomerDetailsResponse response = new CustomerDetailsResponse(new Date(), "Customer Created Succesfully", "200", cust);
 
-			return new ResponseEntity<Object>(response, HttpStatus.OK);
+				return new ResponseEntity<Object>(response, HttpStatus.OK);
+			}
+			else
+			{
+				CustomResponseForNoUser response = new CustomResponseForNoUser(new Date(),"Invalid Email id","409");
+				return new ResponseEntity<Object>(response,HttpStatus.OK);
+			}
+
 		}else {
 
 			CustomResponseForNoUser response = new CustomResponseForNoUser(new Date(),"Email id already exists","409");
