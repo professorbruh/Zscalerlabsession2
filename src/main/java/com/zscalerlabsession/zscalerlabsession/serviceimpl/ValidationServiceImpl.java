@@ -1,8 +1,26 @@
 package com.zscalerlabsession.zscalerlabsession.serviceimpl;
 
+import com.zscalerlabsession.zscalerlabsession.Model.Customer;
 import com.zscalerlabsession.zscalerlabsession.service.ValidationService;
+
+import java.util.regex.Pattern;
 
 public class ValidationServiceImpl implements ValidationService
 {
 
+    @Override
+    public boolean emailValidation(Customer customer)
+    {
+        String email_id = customer.getEmailId();
+        String regexPattern = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
+                + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
+        if (email_id!=null)
+        {
+            if(Pattern.compile(regexPattern).matcher(email_id).matches())
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 }
