@@ -4,6 +4,7 @@ import com.zscalerlabsession.zscalerlabsession.Model.Account;
 import com.zscalerlabsession.zscalerlabsession.Repository.AccountRepository;
 import com.zscalerlabsession.zscalerlabsession.response.AccountResponse;
 import com.zscalerlabsession.zscalerlabsession.response.AccountResponse;
+import com.zscalerlabsession.zscalerlabsession.service.ValidationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,11 +18,17 @@ import java.util.Optional;
 public class AccountController {
 
     @Autowired
+    ValidationService validationService;
+
+    @Autowired
     AccountRepository accountRepository;
 
     @PostMapping("/create")
     public ResponseEntity<Object> createCAccount(@RequestBody Account account){
         long num = accountRepository.count();
+        if(!validationService.accountNumberValidation(account)){
+            return new ResponseEntity<Object>(new AccountResponse(new Date(), "Invalid account number", "409", account), HttpStatus.OK);
+        }
         Account savedAccount = accountRepository.save(account);
         long newNum = accountRepository.count();
         String status = "", message = "";
