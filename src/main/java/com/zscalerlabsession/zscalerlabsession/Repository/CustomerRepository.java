@@ -1,6 +1,8 @@
 package com.zscalerlabsession.zscalerlabsession.Repository;
 
+import com.zscalerlabsession.zscalerlabsession.Model.Account;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
@@ -13,5 +15,7 @@ public interface CustomerRepository extends JpaRepository<Customer, Long> {
     Customer fetchCustomerByEmail(String emailId);
 
 
+    @Query("select c from Customer c")
+    Iterable<Customer> fetchCustomers();
 
 }

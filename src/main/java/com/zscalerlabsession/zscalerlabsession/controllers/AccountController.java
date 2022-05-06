@@ -23,7 +23,6 @@ public class AccountController {
     public ResponseEntity<Object> createCAccount(@RequestBody Account account){
         long num = accountRepository.count();
         Account savedAccount = accountRepository.save(account);
-
         long newNum = accountRepository.count();
         String status = "", message = "";
         if(newNum > num) {

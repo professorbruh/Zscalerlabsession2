@@ -19,5 +19,9 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     @Query("select a from Account a where a.accountNumber=?1")
     Account fetchAccountByAccountNumber(long id);
 
+    @Query("select c from Account c")
+    Iterable<Account> fetchAccounts();
+
+
 
 }
