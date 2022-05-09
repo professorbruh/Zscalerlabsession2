@@ -4,6 +4,7 @@ package com.zscalerlabsession.zscalerlabsession.controllers;
 import com.zscalerlabsession.zscalerlabsession.Model.Customer;;
 import com.zscalerlabsession.zscalerlabsession.Repository.CustomerRepository;
 import com.zscalerlabsession.zscalerlabsession.response.CustomerDetailsResponse;
+import com.zscalerlabsession.zscalerlabsession.response.GetCustomerResponse;
 import com.zscalerlabsession.zscalerlabsession.security.JwtUtils;
 import com.zscalerlabsession.zscalerlabsession.response.CustomResponseForNoUser;
 
@@ -19,6 +20,7 @@ import java.util.Date;
 
 @RestController
 @RequestMapping("/customers")
+@CrossOrigin
 public class CustomerController
 {
    
@@ -70,5 +72,17 @@ public class CustomerController
 		}
 
 	}
-
+	@PostMapping("/getCustomer")
+	public ResponseEntity<Object> getCustomer(@RequestBody Customer customerDetails)
+	{
+		System.out.println(customerDetails.getEmailId());
+		Customer fetchCustomer = authService.fetchCustomerByEmail(customerDetails.getEmailId());
+		if (fetchCustomer == null)
+		{
+			CustomResponseForNoUser response = new CustomResponseForNoUser(new Date(),"Error in authentication","409");
+			return new ResponseEntity<Object>(response,HttpStatus.OK);
+		}
+		GetCustomerResponse response = new GetCustomerResponse(fetchCustomer);
+		return new ResponseEntity<Object>(response,HttpStatus.OK);
+	}
 }

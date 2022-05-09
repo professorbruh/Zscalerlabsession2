@@ -16,6 +16,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,6 +25,7 @@ import com.zscalerlabsession.zscalerlabsession.service.AuthService;
 import java.util.Date;
 
 @RestController
+@CrossOrigin
 public class LoginController {
 
 
@@ -79,6 +81,5 @@ public class LoginController {
             return new ResponseEntity<Object>(response,HttpStatus.OK);
         }
     }
-
 
 }
