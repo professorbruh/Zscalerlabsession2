@@ -25,7 +25,7 @@ public class AccountController {
     AccountRepository accountRepository;
 
     @PostMapping("/create")
-    public ResponseEntity<Object> createCAccount(@RequestBody Account account){
+    public ResponseEntity<Object> createAccount(@RequestBody Account account){
         long num = accountRepository.count();
         if(!validationService.accountNumberValidation(account)){
             return new ResponseEntity<Object>(new AccountResponse(new Date(), "Invalid account number", "409", account), HttpStatus.OK);

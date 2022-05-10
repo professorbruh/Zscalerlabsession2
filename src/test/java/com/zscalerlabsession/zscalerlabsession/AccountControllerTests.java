@@ -25,7 +25,7 @@ public class AccountControllerTests{
     void createAccountTest(){
         long num = accountRepository.count();
         Account account = new Account(213, 2334432, 2354.10, "salary");
-        accountController.createCAccount(account);
+        accountController.createAccount(account);
 
         assertTrue(accountRepository.count() == num + 1);
     }
