@@ -65,19 +65,19 @@ public class LoginController {
                     return new ResponseEntity<Object>(response, HttpStatus.OK);
                 }
                 else {
-                    CustomResponseForNoUser response = new CustomResponseForNoUser(new Date(),"Error in authenticaion","409");
+                    CustomResponseForNoUser response = new CustomResponseForNoUser(new Date(),"Error in authenticaion","401");
                     return new ResponseEntity<Object>(response,HttpStatus.UNAUTHORIZED);
 
                 }
 
             }else{
-                CustomResponseForNoUser response = new CustomResponseForNoUser(new Date(),"Invalid Credentials","409");
+                CustomResponseForNoUser response = new CustomResponseForNoUser(new Date(),"Invalid Credentials","401");
                 return new ResponseEntity<Object>(response,HttpStatus.UNAUTHORIZED);
             }
         }
         else
         {
-            CustomResponseForNoUser response = new CustomResponseForNoUser(new Date(),"User Not Found","409");
+            CustomResponseForNoUser response = new CustomResponseForNoUser(new Date(),"User Not Found","401");
             return new ResponseEntity<Object>(response,HttpStatus.UNAUTHORIZED);
         }
     }

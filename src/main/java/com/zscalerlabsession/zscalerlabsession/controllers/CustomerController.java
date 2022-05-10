@@ -61,13 +61,13 @@ public class CustomerController
 			else
 			{
 				CustomResponseForNoUser response = new CustomResponseForNoUser(new Date(),"Invalid Email id","409");
-				return new ResponseEntity<Object>(response,HttpStatus.OK);
+				return new ResponseEntity<Object>(response,HttpStatus.UNAUTHORIZED);
 			}
 
 		}else {
 
 			CustomResponseForNoUser response = new CustomResponseForNoUser(new Date(),"Email id already exists","409");
-			return new ResponseEntity<Object>(response,HttpStatus.OK);
+			return new ResponseEntity<Object>(response,HttpStatus.UNAUTHORIZED);
 
 		}
 
