@@ -66,19 +66,19 @@ public class LoginController {
                 }
                 else {
                     CustomResponseForNoUser response = new CustomResponseForNoUser(new Date(),"Error in authenticaion","409");
-                    return new ResponseEntity<Object>(response,HttpStatus.OK);
+                    return new ResponseEntity<Object>(response,HttpStatus.BAD_REQUEST);
 
                 }
 
             }else{
                 CustomResponseForNoUser response = new CustomResponseForNoUser(new Date(),"Invalid Credentials","409");
-                return new ResponseEntity<Object>(response,HttpStatus.OK);
+                return new ResponseEntity<Object>(response,HttpStatus.BAD_REQUEST);
             }
         }
         else
         {
             CustomResponseForNoUser response = new CustomResponseForNoUser(new Date(),"User Not Found","409");
-            return new ResponseEntity<Object>(response,HttpStatus.OK);
+            return new ResponseEntity<Object>(response,HttpStatus.BAD_REQUEST);
         }
     }
 
