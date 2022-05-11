@@ -9,4 +9,6 @@ public interface AuthService
     Customer createCustomer(Customer customerDetails);
 
     Customer fetchCustomerByEmail(String emailId);
+
+    void updatePassword(String emailId, String password);
 }
