@@ -85,4 +85,13 @@ public class CustomerController
 		GetCustomerResponse response = new GetCustomerResponse(fetchCustomer);
 		return new ResponseEntity<Object>(response,HttpStatus.OK);
 	}
+	@PostMapping("/updatePassword") //Done by Tejesh
+	public String updatePassword(@RequestBody Customer customerDetails)
+	{
+		String emailId = customerDetails.getEmailId();
+		String password = customerDetails.getPassword();
+		authService.updatePassword(emailId, password);
+		return "Update Successful";
+
+	}
 }

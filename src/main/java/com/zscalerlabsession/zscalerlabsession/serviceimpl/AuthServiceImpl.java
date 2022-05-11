@@ -35,7 +35,7 @@ public class AuthServiceImpl implements AuthService {
         long accountNumber = 100000000001L + num;
         Account newAccount = new Account(0, accountNumber, 0.00, "saving");
         ResponseEntity<Object> obj = accountController.createAccount(newAccount);
-        if(accountRepository.count() != num + 1){
+        if (accountRepository.count() != num + 1) {
             return null;
         }
         customerDetails.setAccountNumber(accountNumber);
@@ -46,5 +46,14 @@ public class AuthServiceImpl implements AuthService {
     public Customer fetchCustomerByEmail(String emailId) {
         // TODO Auto-generated method stub
         return customerRepository.fetchCustomerByEmail(emailId);
+    }
+
+    @Override //Done by Tejesh
+    public void updatePassword(String emailId, String password) {
+
+        Customer cust = customerRepository.fetchCustomerByEmail(emailId);
+        cust.setPassword(encoder.encode(password));
+        customerRepository.save(cust);
+
     }
 }
