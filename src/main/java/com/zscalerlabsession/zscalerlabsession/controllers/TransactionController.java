@@ -4,12 +4,16 @@ import com.zscalerlabsession.zscalerlabsession.Model.Account;
 import com.zscalerlabsession.zscalerlabsession.Model.Transaction;
 import com.zscalerlabsession.zscalerlabsession.Repository.AccountRepository;
 import com.zscalerlabsession.zscalerlabsession.Repository.TransactionRepository;
+import com.zscalerlabsession.zscalerlabsession.Request.TransactionRequest;
 import com.zscalerlabsession.zscalerlabsession.response.ResponseForFailedTransaction;
 import com.zscalerlabsession.zscalerlabsession.response.TransactionResponse;
+import com.zscalerlabsession.zscalerlabsession.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RequestMapping("/transaction")
 @RestController
@@ -20,7 +24,13 @@ public class TransactionController {
     TransactionRepository transactionRepository;
 
     @Autowired
+    AccountService accountService;
+
+    @Autowired
     AccountRepository accountRepository;
+
+
+
 
 //
 //    @GetMapping("/get")
@@ -73,4 +83,18 @@ public class TransactionController {
 //        return new ResponseEntity<Object>(response, HttpStatus.OK);
     }
 
+    @PostMapping("/direct")
+    public ResponseEntity<Object> directTransfer(@RequestBody TransactionRequest transact){
+        Account account = accountService.fetchAccountByEmail(transact.getEmailId());
+        if(account.getBalance() + transact.getAmount() > 0){
+            account.setBalance(account.getBalance() + transact.getAmount());
+            accountRepository.save(account);
+            ResponseForFailedTransaction response = new ResponseForFailedTransaction(new java.util.Date(),"Transaction successful");
+            return new ResponseEntity<Object>(response, HttpStatus.OK);
+        }
+        else{
+            ResponseForFailedTransaction response = new ResponseForFailedTransaction(new java.util.Date(),"Insufficient Balance");
+            return new ResponseEntity<Object>(response, HttpStatus.OK);
+        }
+    }
 }
