@@ -48,7 +48,7 @@ public class AuthServiceImpl implements AuthService {
         return customerRepository.fetchCustomerByEmail(emailId);
     }
 
-    @Override //Done by Tejesh
+    @Override //Done by Tejesh and Vishwachand
     public void updatePassword(String emailId, String password) {
 
         Customer cust = customerRepository.fetchCustomerByEmail(emailId);

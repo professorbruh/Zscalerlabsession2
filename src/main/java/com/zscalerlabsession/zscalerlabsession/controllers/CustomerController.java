@@ -3,6 +3,7 @@ package com.zscalerlabsession.zscalerlabsession.controllers;
 
 import com.zscalerlabsession.zscalerlabsession.Model.Customer;;
 import com.zscalerlabsession.zscalerlabsession.Repository.CustomerRepository;
+import com.zscalerlabsession.zscalerlabsession.Request.UpdatePasswordRequest;
 import com.zscalerlabsession.zscalerlabsession.response.CustomerDetailsResponse;
 import com.zscalerlabsession.zscalerlabsession.response.GetCustomerResponse;
 import com.zscalerlabsession.zscalerlabsession.security.JwtUtils;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -38,6 +40,9 @@ public class CustomerController
 
 	@Autowired
 	ValidationService validationService;
+
+	@Autowired
+	PasswordEncoder encoder;
 
     @GetMapping("/testing")
     public ResponseEntity<Object> testing(){
@@ -85,13 +90,22 @@ public class CustomerController
 		GetCustomerResponse response = new GetCustomerResponse(fetchCustomer);
 		return new ResponseEntity<Object>(response,HttpStatus.OK);
 	}
-	@PostMapping("/updatePassword") //Done by Tejesh
-	public String updatePassword(@RequestBody Customer customerDetails)
+	@PostMapping("/updatePassword") // Done by Tejesh and Vishwachand
+	public String updatePassword(@RequestBody UpdatePasswordRequest Details)
 	{
-		String emailId = customerDetails.getEmailId();
-		String password = customerDetails.getPassword();
-		authService.updatePassword(emailId, password);
+		String emailId = Details.getEmailId();
+		String oldPassword = Details.getOldPassword();
+		String newPassword = Details.getNewPassword();
+
+		Customer fetchCustomer = authService.fetchCustomerByEmail(emailId);
+
+		if(!encoder.matches(oldPassword, fetchCustomer.getPassword()))
+			return "Incorrect Current Password";
+
+		authService.updatePassword(emailId, newPassword);
 		return "Update Successful";
 
+
 	}
+
 }
