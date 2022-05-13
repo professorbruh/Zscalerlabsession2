@@ -50,11 +50,11 @@ public class TransactionController {
 
         if(sender!=null && receiver!=null)
         {
-            if(receiver.getBalance()>=transaction.getAmount()) {
+            if(sender.getBalance()>=transaction.getAmount()) {
                 long millis = System.currentTimeMillis();
                 java.sql.Date date = new java.sql.Date(millis);
-                sender.setBalance(sender.getBalance() + transaction.getAmount());
-                receiver.setBalance(receiver.getBalance() - transaction.getAmount());
+                sender.setBalance(sender.getBalance() - transaction.getAmount());
+                receiver.setBalance(receiver.getBalance() + transaction.getAmount());
                 accountRepository.save(sender);
                 accountRepository.save(receiver);
                 Transaction newTransaction = new Transaction(sender.getAccountNumber(), receiver.getAccountNumber(), transaction.getAmount(), "Complete", date);
