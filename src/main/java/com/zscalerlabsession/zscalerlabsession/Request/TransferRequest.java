@@ -25,6 +25,10 @@ public class TransferRequest
         this.password = password;
     }
 
+    public TransferRequest(){
+        super();
+    }
+
     public String getSender() {
         return sender;
     }
