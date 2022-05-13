@@ -16,5 +16,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     @Query("select c from Transaction c")
     Iterable<Transaction> fetchTransactions();
 
+    @Query("select c from Transaction c where c.receiver=?1 or c.sender=?1")
+    Iterable<Transaction> getTransactionbyAccountNumber(long receiver,long sender);
 }
 
