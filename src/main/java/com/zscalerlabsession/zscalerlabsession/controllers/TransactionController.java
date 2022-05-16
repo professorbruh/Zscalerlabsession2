@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -64,6 +65,7 @@ public class TransactionController {
             return new ResponseEntity<Object>(response, HttpStatus.OK);
         }
 
+
         Customer customer = authService.fetchCustomerByEmail(transaction.getSender());
 
         if(!encoder.matches(transaction.getPassword(),customer.getPassword()))
@@ -76,10 +78,10 @@ public class TransactionController {
 
         Account receiver = accountRepository.fetchAccountByAccountNumber(transaction.getReceiver());
 
-
-
         if(sender!=null && receiver!=null)
         {
+            double prev_balance_sender = sender.getBalance();
+            double prev_balance_receiver = receiver.getBalance();
             if(sender.getBalance()>=transaction.getAmount()) {
                 long millis = System.currentTimeMillis();
                 java.sql.Date date = new java.sql.Date(millis);
@@ -143,18 +145,53 @@ public class TransactionController {
         Iterable<Transaction> all_transaction = transactionRepository.getTransactionbyAccountNumber(account.getAccountNumber(),account.getAccountNumber());
 
         Iterator<Transaction> iterator= all_transaction.iterator();
-
+        int ctr = 0;
         while(iterator.hasNext())
-        {
+        {   ctr++;
             Transaction transaction = iterator.next();
+
             if (transaction.getReceiver()!=account.getAccountNumber())
             {
                 transaction.setAmount(transaction.getAmount()*-1);
+
             }
         }
 
-        return new ResponseEntity<Object>(all_transaction,HttpStatus.OK);
+        HashMap<String,Object> data= new HashMap();
+        data.put("recordsTotal",ctr);
+        data.put("recordsFiltered",ctr);
+        data.put("draw",1);
+        data.put("data",all_transaction);
+
+        return new ResponseEntity<Object>(data,HttpStatus.OK);
+
+    }
+    @PostMapping("/reversal")
+    public ResponseEntity<Object> reversal(@RequestBody TransferRequest transaction )
+    {
+
+        long millis = System.currentTimeMillis();
+        java.sql.Date date = new java.sql.Date(millis);
+        Account receiver =accountService.fetchAccountByEmail(transaction.getSender());
+        Account sender = accountRepository.fetchAccountByAccountNumber(transaction.getReceiver());
+        double prev_balance_receiver = receiver.getBalance()+ transaction.getAmount();
+        double prev_balance_sender = sender.getBalance() - transaction.getAmount();
+
+        sender.setBalance(prev_balance_sender);
+        receiver.setBalance(prev_balance_receiver);
+        accountRepository.save(sender);
+        accountRepository.save(receiver);
+        Transaction newTransaction = new Transaction(sender.getAccountNumber(), receiver.getAccountNumber(), transaction.getAmount(), "Failed", date);
+        transactionRepository.save(newTransaction);
+        TransactionResponse response = new TransactionResponse(newTransaction.getId(), newTransaction.getSender(), newTransaction.getReceiver(),
+                newTransaction.getAmount(), newTransaction.getStatus(), date);
+        return new ResponseEntity<Object>(response, HttpStatus.OK);
 
 
     }
+
 }
+
+
+
+
