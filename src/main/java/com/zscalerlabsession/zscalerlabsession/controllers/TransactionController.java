@@ -17,10 +17,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @RequestMapping("/transaction")
 @RestController
@@ -141,9 +140,7 @@ public class TransactionController {
     public ResponseEntity<Object> history(@RequestBody Customer customer)
     {
         Account account = accountService.fetchAccountByEmail(customer.getEmailId());
-
         Iterable<Transaction> all_transaction = transactionRepository.getTransactionbyAccountNumber(account.getAccountNumber(),account.getAccountNumber());
-
         Iterator<Transaction> iterator= all_transaction.iterator();
         int ctr = 0;
         while(iterator.hasNext())
@@ -156,12 +153,13 @@ public class TransactionController {
 
             }
         }
-
+        List<Transaction> all = StreamSupport.stream(all_transaction.spliterator(),false).collect(Collectors.toList());
+        Collections.reverse(all);
         HashMap<String,Object> data= new HashMap();
         data.put("recordsTotal",ctr);
         data.put("recordsFiltered",ctr);
         data.put("draw",1);
-        data.put("data",all_transaction);
+        data.put("data",all);
 
         return new ResponseEntity<Object>(data,HttpStatus.OK);
 

@@ -1,6 +1,7 @@
 package com.zscalerlabsession.zscalerlabsession.controllers;
 
 
+import com.zscalerlabsession.zscalerlabsession.Model.Account;
 import com.zscalerlabsession.zscalerlabsession.Model.Customer;
 import com.zscalerlabsession.zscalerlabsession.Repository.CustomerRepository;
 import com.zscalerlabsession.zscalerlabsession.Request.UpdatePasswordRequest;
@@ -9,6 +10,7 @@ import com.zscalerlabsession.zscalerlabsession.response.GetCustomerResponse;
 import com.zscalerlabsession.zscalerlabsession.security.JwtUtils;
 import com.zscalerlabsession.zscalerlabsession.response.CustomResponseForNoUser;
 
+import com.zscalerlabsession.zscalerlabsession.service.AccountService;
 import com.zscalerlabsession.zscalerlabsession.service.AuthService;
 import com.zscalerlabsession.zscalerlabsession.service.ValidationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +36,9 @@ public class CustomerController
 
     @Autowired
     JwtUtils jwtUtils;
+
+	@Autowired
+	AccountService accountService;
 
 	@Autowired
 	AuthService authService;
@@ -87,7 +92,9 @@ public class CustomerController
 			CustomResponseForNoUser response = new CustomResponseForNoUser(new Date(),"Error in authentication","409");
 			return new ResponseEntity<Object>(response,HttpStatus.OK);
 		}
-		GetCustomerResponse response = new GetCustomerResponse(fetchCustomer);
+		Account account = accountService.fetchAccountByEmail(customerDetails.getEmailId());
+		fetchCustomer.setPassword(null);
+		GetCustomerResponse response = new GetCustomerResponse(fetchCustomer,account.getBalance());
 		return new ResponseEntity<Object>(response,HttpStatus.OK);
 	}
 	@PostMapping("/updatePassword") // Done by Tejesh and Vishwachand
