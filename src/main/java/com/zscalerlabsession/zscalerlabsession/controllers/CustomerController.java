@@ -1,7 +1,7 @@
 package com.zscalerlabsession.zscalerlabsession.controllers;
 
 
-import com.zscalerlabsession.zscalerlabsession.Model.Customer;;
+import com.zscalerlabsession.zscalerlabsession.Model.Customer;
 import com.zscalerlabsession.zscalerlabsession.Repository.CustomerRepository;
 import com.zscalerlabsession.zscalerlabsession.Request.UpdatePasswordRequest;
 import com.zscalerlabsession.zscalerlabsession.response.CustomerDetailsResponse;
