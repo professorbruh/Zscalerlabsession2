@@ -5,6 +5,7 @@ import com.zscalerlabsession.zscalerlabsession.Model.Account;
 import com.zscalerlabsession.zscalerlabsession.Model.Customer;
 import com.zscalerlabsession.zscalerlabsession.Repository.CustomerRepository;
 import com.zscalerlabsession.zscalerlabsession.Request.UpdatePasswordRequest;
+import com.zscalerlabsession.zscalerlabsession.Request.UpdateUserRequest;
 import com.zscalerlabsession.zscalerlabsession.response.CustomerDetailsResponse;
 import com.zscalerlabsession.zscalerlabsession.response.GetCustomerResponse;
 import com.zscalerlabsession.zscalerlabsession.security.JwtUtils;
@@ -113,6 +114,34 @@ public class CustomerController
 		return "Update Successful";
 
 
+	}
+
+	@PostMapping("/updateUser")
+	public String updateUser(@RequestBody UpdateUserRequest user)
+	{
+		Customer fetchCustomer = authService.fetchCustomerByEmail(user.getEmailId());
+
+		if(!encoder.matches(user.getPassword(), fetchCustomer.getPassword()))
+			return "Incorrect Password";
+		if(user.getAddress()!=null)
+		{
+			fetchCustomer.setAddress(user.getAddress());
+		}
+		if(user.getName()!=null)
+		{
+			fetchCustomer.setName(user.getName());
+		}
+		if(user.getPhoneNumber()!=null)
+		{
+			fetchCustomer.setPhoneNumber(user.getPhoneNumber());
+		}
+		if(user.getEmailId()!=null)
+		{
+			fetchCustomer.setEmailId(user.getEmailId());
+		}
+
+		customers.save(fetchCustomer);
+		return "Successful";
 	}
 
 }
