@@ -52,6 +52,10 @@ public class UpdateUserRequest {
 
     private String current_emailId;
 
+    public UpdateUserRequest(){
+        super();
+    }
+
     public UpdateUserRequest(String name, String phoneNumber, String address, String emailId, String password) {
         this.name = name;
         this.phoneNumber = phoneNumber;

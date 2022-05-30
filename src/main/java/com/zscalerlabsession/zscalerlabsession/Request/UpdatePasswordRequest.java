@@ -5,7 +5,11 @@ public class UpdatePasswordRequest {
     String newPassword;
     String oldPassword;
 
-    UpdatePasswordRequest(String emailId, String newPassword, String oldPassword){
+    public UpdatePasswordRequest(){
+        super();
+    }
+
+    public UpdatePasswordRequest(String emailId, String newPassword, String oldPassword){
         this.emailId = emailId;
         this.newPassword = newPassword;
         this.oldPassword = oldPassword;
