@@ -6,10 +6,8 @@ import com.zscalerlabsession.zscalerlabsession.Model.Customer;
 import com.zscalerlabsession.zscalerlabsession.Repository.CustomerRepository;
 import com.zscalerlabsession.zscalerlabsession.Request.UpdatePasswordRequest;
 import com.zscalerlabsession.zscalerlabsession.Request.UpdateUserRequest;
-import com.zscalerlabsession.zscalerlabsession.response.CustomerDetailsResponse;
-import com.zscalerlabsession.zscalerlabsession.response.GetCustomerResponse;
+import com.zscalerlabsession.zscalerlabsession.response.*;
 import com.zscalerlabsession.zscalerlabsession.security.JwtUtils;
-import com.zscalerlabsession.zscalerlabsession.response.CustomResponseForNoUser;
 
 import com.zscalerlabsession.zscalerlabsession.service.AccountService;
 import com.zscalerlabsession.zscalerlabsession.service.AuthService;
@@ -117,31 +115,33 @@ public class CustomerController
 	}
 
 	@PostMapping("/updateUser")
-	public String updateUser(@RequestBody UpdateUserRequest user)
+	public ResponseEntity<Object> updateUser(@RequestBody UpdateUserRequest user)
 	{
 		Customer fetchCustomer = authService.fetchCustomerByEmail(user.getEmailId());
 
-		if(!encoder.matches(user.getPassword(), fetchCustomer.getPassword()))
-			return "Incorrect Password";
-		if(user.getAddress()!=null)
+		if(!encoder.matches(user.getPassword(), fetchCustomer.getPassword())) {
+			CustomerResponseForInvalidLogin response = new CustomerResponseForInvalidLogin("Wrong password", new Date());
+			return new ResponseEntity<Object>(response,HttpStatus.UNAUTHORIZED);
+		}
+		if(user.getAddress()!="")
 		{
 			fetchCustomer.setAddress(user.getAddress());
 		}
-		if(user.getName()!=null)
+		if(user.getName()!="")
 		{
 			fetchCustomer.setName(user.getName());
 		}
-		if(user.getPhoneNumber()!=null)
+		if(user.getPhoneNumber()!="")
 		{
 			fetchCustomer.setPhoneNumber(user.getPhoneNumber());
 		}
-		if(user.getEmailId()!=null)
+		if(user.getEmailId()!="")
 		{
 			fetchCustomer.setEmailId(user.getEmailId());
 		}
-
 		customers.save(fetchCustomer);
-		return "Successful";
+		CustomerResponseForInvalidLogin response = new CustomerResponseForInvalidLogin("Success", new Date());
+		return new ResponseEntity<Object>(response,HttpStatus.OK);
 	}
 
 }
