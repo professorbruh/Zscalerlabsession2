@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-ZscalerlabsessionApplication<zscalerlabsession>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.zscalerlabsession.zscalerlabsession.ZscalerlabsessionApplication",
+            "projectName": "zscalerlabsession",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
