@@ -120,7 +120,7 @@ public class TransactionController {
         if(transact.getAmount()<=0)
         {
             ResponseForFailedTransaction response = new ResponseForFailedTransaction(new java.util.Date(),"Invalid Amount");
-            return new ResponseEntity<Object>(response, HttpStatus.OK);
+            return new ResponseEntity<Object>(response, HttpStatus.EXPECTATION_FAILED);
         }
 
         Account account = accountService.fetchAccountByEmail(transact.getEmailId());
